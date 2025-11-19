@@ -1,10 +1,10 @@
 import React from 'react'
-import Counter from './components/Counter'
+import Employee from './components/Employee'
 
 const App = () => {
   return (
     <>
-      <Counter/>
+      <Employee/>
     </>
   )
 }
