@@ -2,23 +2,24 @@ import React, { useState } from 'react'
 
 function Employee() {
 
-    const [emp,setEmp] = useState({});
-    const [list,setList] = useState([]);
+    const [emp, setEmp] = useState({});
+    const [list, setList] = useState([]);
 
-    const handleInput = (e)=>{
-        const {name,value} = e.target;
-        setEmp({...emp,[name]:value});
+    const handleInput = (e) => {
+        const { name, value } = e.target;
+        setEmp({ ...emp, [name]: value });
     }
 
-    const handleSubmit=(e)=>{
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        setList([...list,{...emp,id:Date.now()}]);       
-
+        console.log(emp);
+        setList([...list, { ...emp, id: Date.now() }]);
+        setEmp({});
+        console.log(emp);
     }
 
     console.log(list);
-    
+
 
     return (
         <>
@@ -29,17 +30,17 @@ function Employee() {
                             <h2>Employee Data</h2>
                             <div className="mb-3">
                                 <label htmlFor="employeeName" className="form-label">Employee Name</label>
-                                <input type="text" onChange={handleInput} name='ename' className="form-control" id="employeeName" aria-describedby="emailHelp" />
+                                <input type="text" value={emp.ename || ""} onChange={handleInput} name='ename' className="form-control" id="employeeName" aria-describedby="emailHelp" />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="salary" className="form-label">Employee Salary</label>
-                                <input type="number" onChange={handleInput} name='salary' className="form-control" id="salary" />
+                                <input type="number" value={emp.salary || ""} onChange={handleInput} name='salary' className="form-control" id="salary" />
                             </div>
                             <button type="submit" className="btn btn-primary">Submit</button>
                         </form>
                     </div>
                 </div>
-                <div className='row justify-content-center'>
+                <div className='row justify-content-center mt-5'>
                     <div className='col-md-8'>
                         <table className='table table-dark table-bordered table-striped'>
                             <thead>
@@ -53,12 +54,11 @@ function Employee() {
                             <tbody>
                                 {
                                     list.length != 0 ?
-                                    
-                                    list.map((employee,index)=>{
-                                        const {ename,salary,id} = employee;
-                                        return (
-                                            <>
-                                                <tr>
+
+                                        list.map((employee, index) => {
+                                            const { ename, salary, id } = employee;
+                                            return (
+                                                <tr key={id}>
                                                     <td>{index + 1}</td>
                                                     <td>{ename}</td>
                                                     <td>{salary}</td>
@@ -66,14 +66,13 @@ function Employee() {
                                                         <button className='btn btn-danger'>Delete</button>
                                                     </td>
                                                 </tr>
-                                            </>
-                                        )   
-                                    })
+                                            )
+                                        })
 
-                                    : 
-                                    <tr>
-                                        <td colSpan={4} className='text-center'>Data Not Found</td>
-                                    </tr>
+                                        :
+                                        <tr>
+                                            <td colSpan={4} className='text-center'>Data Not Found</td>
+                                        </tr>
                                 }
                             </tbody>
                         </table>
