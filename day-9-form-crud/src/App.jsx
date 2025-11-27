@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function App() {
   const [user, setUser] = useState({});
   const [list, setList] = useState([]);
   const [editId, setEditId] = useState(null);
   const [error,setError] = useState({});
+  const [mount,setMount] = useState(false);
+
+  useEffect(()=>{
+    let oldList = JSON.parse(localStorage.getItem('list')) || []; 
+    setList(oldList);
+    setMount(true);
+  },[])
+
+  useEffect(()=>{
+    if(mount){
+      localStorage.setItem('list',JSON.stringify(list));
+    }
+  },[list]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -13,22 +26,22 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    let data = [];
     if(validation()) {return};
 
     if (editId == null) {
-      setList([...list, { ...user, id: Date.now() }]);
+      data = [...list, { ...user, id: Date.now()}]
     } else {
-      let data = list.map((val) => {
+      data = list.map((val) => {
         if (val.id == editId) {
           return { ...val, ...user };
         }
         return val;
       });
-      setList(data);
       setEditId(null);
     }
     
+    setList(data);
     
     setUser({});
   };
