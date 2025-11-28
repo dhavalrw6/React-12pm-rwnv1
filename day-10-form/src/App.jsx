@@ -1,38 +1,65 @@
 import React, { useState } from "react";
 
 function App() {
-  const [user,setUser] = useState({});
-  const [hobby,setHobby] = useState([]);
-  const [list,setList] = useState([]);
+  const [user, setUser] = useState({});
+  const [hobby, setHobby] = useState([]);
+  const [list, setList] = useState([]);
+  const [editId,setEditId] = useState(null);
 
   const cities = ["New York", "London", "Tokyo", "Paris", "Sydney"];
-  const handleChange = (e)=>{
-    let {name,value} = e.target;
+  const handleChange = (e) => {
+    let { name, value } = e.target;
 
-    if(name=="hobby"){ 
+    if (name == "hobby") {
       let newHobby = hobby;
-      if(newHobby.includes(value)){
-        newHobby = newHobby.filter(val => val != value);        
-      }else{
+      if (newHobby.includes(value)) {
+        newHobby = newHobby.filter((val) => val != value);
+      } else {
         newHobby.push(value);
       }
       value = newHobby;
       setHobby(newHobby);
     }
 
-    setUser({...user,[name]:value})
+    setUser({ ...user, [name]: value });
+  };
 
-  }
-
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    setList([...list,{...user,id:Date.now()}]);
-    
+    if(editId){
+      let newList = list;
+      newList = newList.map((value)=>{
+
+        if(value.id == editId){
+          return {...value,...user}
+        }
+
+        return value;
+      })
+      setList(newList);
+      setEditId(null);
+    }else{
+      setList([...list, { ...user, id: Date.now() }]);
+    }
+      
+
+
+    setUser({});
+    setHobby([]);
+  };
+
+  const handleDelete = (id)=>{
+    let newList = list.filter((value)=> value.id != id);
+    setList(newList); 
   }
 
-  console.log(list);
-  
+  const handleEdit=(id)=>{
+    let data = list.find(value => value.id == id);
+    setUser(data);
+    setHobby(data.hobby);
+    setEditId(id);
+  }
 
   return (
     <div className="container">
@@ -49,7 +76,7 @@ function App() {
                 className="form-control"
                 name="username"
                 id="username"
-                value={user.username || ''}
+                value={user.username || ""}
                 onChange={handleChange}
               />
             </div>
@@ -62,7 +89,7 @@ function App() {
                 className="form-control"
                 name="email"
                 id="email"
-                value={user.email || ''}
+                value={user.email || ""}
                 onChange={handleChange}
               />
             </div>
@@ -75,7 +102,7 @@ function App() {
                 className="form-control"
                 name="password"
                 id="password"
-                value={user.password || ''}
+                value={user.password || ""}
                 onChange={handleChange}
               />
             </div>
@@ -90,7 +117,7 @@ function App() {
                   name="gender"
                   value="male"
                   id="male"
-                  checked = {user.gender == "male" ? true : false}
+                  checked={user.gender == "male" ? true : false}
                   onChange={handleChange}
                 />
                 <label htmlFor="male" className="form-check-label">
@@ -104,7 +131,7 @@ function App() {
                   name="gender"
                   value="female"
                   id="female"
-                  checked = {user.gender == "female" ? true : false}
+                  checked={user.gender == "female" ? true : false}
                   onChange={handleChange}
                 />
                 <label htmlFor="female" className="form-check-label">
@@ -123,7 +150,7 @@ function App() {
                   name="hobby"
                   value="reading"
                   id="reading"
-                  checked = {hobby.includes("reading")}
+                  checked={hobby.includes("reading")}
                   onChange={handleChange}
                 />
                 <label htmlFor="reading" className="form-check-label">
@@ -137,7 +164,7 @@ function App() {
                   name="hobby"
                   value="writing"
                   id="writing"
-                  checked = {hobby.includes("writing")}
+                  checked={hobby.includes("writing")}
                   onChange={handleChange}
                 />
                 <label htmlFor="writing" className="form-check-label">
@@ -151,7 +178,7 @@ function App() {
                   name="hobby"
                   value="coding"
                   id="coding"
-                  checked = {hobby.includes("coding")}
+                  checked={hobby.includes("coding")}
                   onChange={handleChange}
                 />
                 <label htmlFor="coding" className="form-check-label">
@@ -169,15 +196,14 @@ function App() {
                 aria-label="Default select example"
                 onChange={handleChange}
               >
-                <option selected disabled>
+                <option selected disabled={user.city ? true : false}>
                   --select-city--
                 </option>
-                {
-                  cities.map((city)=>(
-                    <option value={city} selected={user.city == city} >{city}</option>
-                  ))
-                }
-                
+                {cities.map((city) => (
+                  <option value={city} selected={user.city == city}>
+                    {city}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-3">
@@ -190,8 +216,9 @@ function App() {
                 rows={3}
                 className="form-control"
                 onChange={handleChange}
+                value={user.address || ""}
               >
-                {user.address || ''}
+                
               </textarea>
             </div>
             <button type="submit" className="btn btn-primary me-3">
@@ -201,6 +228,60 @@ function App() {
               Reset
             </button>
           </form>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-12">
+          <div className="table-responsive">
+            <table className="table table-dark table-bordered table-striped table-hover caption-top">
+              <caption>
+                <h2>User Data</h2>
+              </caption>
+              <thead>
+                <tr>
+                  <th>Sr. No</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Password</th>
+                  <th>Gender</th>
+                  <th>Hobby</th>
+                  <th>City</th>
+                  <th>Address</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {list.length > 0 ? (
+                  list.map((value, index) => {
+                    const {username,email,password,gender,hobby,city,address,id} = value;
+                    return (
+                      <tr key={id}>
+                        <td>{index + 1}</td>
+                        <td>{username}</td>
+                        <td>{email}</td>
+                        <td>{password}</td>
+                        <td>{gender}</td>
+                        <td>{hobby.join(", ")}</td>
+                        <td>{city}</td>
+                        <td>{address}</td>
+                        <td>
+                          <button onClick={()=> handleDelete(id)} className="btn btn-outline-danger" >Delete</button>
+                          {" "}
+                          <button onClick={()=> handleEdit(id)} className="btn btn-outline-warning" >Edit</button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={9} className="text-center">
+                      Data Not Found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
