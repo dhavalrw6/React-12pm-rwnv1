@@ -1,0 +1,39 @@
+{
+  "users": [
+    {
+      "id": 1766121602768,
+      "email": "poha@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1766121627344,
+      "email": "dhaval@gmail.com",
+      "password": "1234"
+    },
+    {
+      "id": 1766122094242,
+      "email": "luho@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1766122207193,
+      "email": "vyrucyjy@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1766122210873,
+      "email": "botobys@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1766122220834,
+      "email": "wycenefupy@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": 1766122235587,
+      "email": "kiran@gmail.com",
+      "password": "123"
+    }
+  ]
+}
