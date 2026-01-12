@@ -9,7 +9,18 @@ const userSlice = createSlice({
     },
     reducers : {
         addUser : (state,action)=>{
-            state.users.push({...action.payload,id:nanoid()})
+            if(state.editId != null){
+                state.users = state.users.map((user)=>{
+                    if(user.id == state.editId){
+                        state.editData = {};
+                        state.editId = null;
+                        return action.payload;
+                    }
+                    return user;
+                })
+            }else{
+                state.users.push({...action.payload,id:nanoid()})
+            }
         },
         deleteUser : (state,action)=>{
             let index = state.users.findIndex((val)=> val.id == action.payload )
@@ -18,9 +29,6 @@ const userSlice = createSlice({
         editUser : (state,action)=>{
             state.editData = state.users.find((val)=> val.id == action.payload)
             state.editId = action.payload;
-        },
-        updateUser : (state,action)=>{
-
         }
     }
 })
